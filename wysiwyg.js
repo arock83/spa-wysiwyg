@@ -27,16 +27,56 @@ var objectStuff = [{
     }
 }];
 
+var input = document.getElementById("input");
+
 var container = document.getElementById("container");
 objectStuff.forEach(function(item, index) {
-	container.innerHTML +=	`<div class="person">
-									<header>`+item.title+" "+item.name+`</header>
-									<section><img height=200px width=200px src="`+item.image+`" rel="samuri">`+item.bio+`</section>
-									<footer>Born: `+item.lifespan.birth+` Died: `+item.lifespan.death+`</footer>
-								</div>`;
+	container.innerHTML += `<div class="person" id="person--${index}">
+									          <header>`+item.title+" "+item.name+`</header>
+									          <section>
+                                <img height=200px width=200px src="`+item.image+`" rel="samuri"/>
+                                <p id="bioText">`+item.bio+`</p>
+                            </section>
+									          <footer>
+                                <p>Born: `+item.lifespan.birth+` Died: `+item.lifespan.death+`</p>
+                            </footer>
+								          </div>`;
 });
 
-document.addEventListener("click", function(event){
-	event.target.classList.add("border");
-	input.focus();
-});
+var bioText = document.getElementById("bioText");
+
+var list = document.getElementsByClassName("person");
+console.log("list: ", list);
+for (n=0;n<list.length; n+=1) {
+  card = list[n];
+  card.addEventListener("click", function (event) {
+      event.currentTarget.classList.add("border");
+      console.log("event target: ", event.currentTarget.id);
+      editFunction(event.currentTarget.id);
+
+  })
+}
+
+let editFunction = (id) => {
+  let ID = id.replace("person--", "")
+  console.log("ID: ", ID);
+  let bio = document.getElementById(id);
+  input.focus();
+  console.log("objectStuff: ", objectStuff[0]);
+  input.value = objectStuff[ID].bio;
+  input.addEventListener("keydown", keylistener)
+}
+
+var keylistener = (event) => {
+    console.log(event);
+    bioText.innerHTML = input.value;
+    if (event.key === "Enter") {
+      input.value = "";
+      input.removeEventListener("keydown", keylistener)
+    }
+}
+
+// document.addEventListener("click", function(event){
+// 	event.target.classList.add("border");
+// 	input.focus();
+// });
